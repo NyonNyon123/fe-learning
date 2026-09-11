@@ -1,0 +1,1791 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>問題 - FE Learning</title>
+
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:"Yu Gothic UI",sans-serif;
+        }
+
+
+        body{
+            background:#f4f7fb;
+        }
+
+
+        header{
+            background:#0066cc;
+            color:white;
+            padding:25px;
+            text-align:center;
+            box-shadow:0 3px 8px rgba(0,0,0,.2);
+        }
+
+
+        header h1{
+            font-size:34px;
+        }
+
+
+        header p{
+            margin-top:10px;
+        }
+
+
+        .container{
+            width:90%;
+            max-width:850px;
+            margin:40px auto;
+        }
+
+
+        .back{
+            display:inline-block;
+            margin-bottom:20px;
+            color:#0066cc;
+            text-decoration:none;
+        }
+
+
+        .question-box{
+            background:white;
+            border-radius:15px;
+            padding:30px;
+            box-shadow:0 4px 10px rgba(0,0,0,.15);
+        }
+
+
+        .mode-label{
+            display:inline-block;
+            margin-bottom:20px;
+            padding:8px 15px;
+            background:#eef6ff;
+            color:#0066cc;
+            border-radius:20px;
+            font-weight:bold;
+        }
+
+
+        .top-info{
+            display:flex;
+            justify-content:space-between;
+            flex-wrap:wrap;
+            gap:15px;
+            margin-bottom:20px;
+            color:#666;
+        }
+
+
+        .question-text{
+            font-size:22px;
+            line-height:1.7;
+            margin-bottom:30px;
+        }
+
+
+        .keyword{
+            color:#0066cc;
+            font-weight:bold;
+            text-decoration:underline dotted;
+            cursor:pointer;
+        }
+
+
+        .keyword:hover{
+            background:#eef6ff;
+        }
+
+
+        .choice{
+            width:100%;
+            padding:18px;
+            margin-bottom:15px;
+            background:white;
+            border:2px solid #ddd;
+            border-radius:10px;
+            font-size:16px;
+            text-align:left;
+            cursor:pointer;
+            transition:.2s;
+        }
+
+
+        .choice:hover{
+            border-color:#0066cc;
+            background:#eef6ff;
+        }
+
+
+        .choice.correct{
+            background:#d4edda;
+            border-color:#28a745;
+        }
+
+
+        .choice.wrong{
+            background:#f8d7da;
+            border-color:#dc3545;
+        }
+
+
+        .result{
+            display:none;
+            margin-top:25px;
+            padding:20px;
+            border-radius:10px;
+            background:#f1f5f9;
+        }
+
+
+        .result h2{
+            margin-bottom:10px;
+        }
+
+
+        .next-button{
+            display:none;
+            width:100%;
+            margin-top:20px;
+            padding:16px;
+            background:#0066cc;
+            color:white;
+            border:none;
+            border-radius:10px;
+            font-size:18px;
+            cursor:pointer;
+        }
+
+
+        .next-button:hover{
+            background:#004f9e;
+        }
+
+
+        /* ======================
+           用語説明
+        ====================== */
+
+        .modal{
+            display:none;
+            position:fixed;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            background:rgba(0,0,0,.55);
+            align-items:center;
+            justify-content:center;
+            padding:20px;
+            z-index:1000;
+        }
+
+
+        .modal-content{
+            width:100%;
+            max-width:550px;
+            background:white;
+            border-radius:15px;
+            padding:30px;
+            box-shadow:0 8px 30px rgba(0,0,0,.3);
+        }
+
+
+        .modal-content h2{
+            color:#0066cc;
+            margin-bottom:15px;
+        }
+
+
+        .modal-content p{
+            line-height:1.8;
+        }
+
+
+        .related{
+            margin-top:20px;
+            padding:15px;
+            background:#f4f7fb;
+            border-radius:10px;
+        }
+
+
+        .related h3{
+            margin-bottom:10px;
+        }
+
+
+        .related ul{
+            padding-left:22px;
+        }
+
+
+        .close-button{
+            width:100%;
+            margin-top:20px;
+            padding:13px;
+            background:#0066cc;
+            color:white;
+            border:none;
+            border-radius:8px;
+            cursor:pointer;
+        }
+
+
+        footer{
+            text-align:center;
+            padding:25px;
+            color:#777;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <h1>
+        FE Learning
+    </h1>
+
+    <p id="pageTitle">
+        通常学習
+    </p>
+
+</header>
+
+
+<div class="container">
+
+
+    <a
+        href="index.html"
+        class="back">
+
+        ← トップページに戻る
+
+    </a>
+
+
+    <div class="question-box">
+
+
+        <div
+            class="mode-label"
+            id="modeLabel">
+
+            📚 通常学習
+
+        </div>
+
+
+        <div class="top-info">
+
+            <span id="questionNumber">
+                問題
+            </span>
+
+            <span id="score">
+                正解数：0
+            </span>
+
+            <span id="combo">
+                連続正解：0
+            </span>
+
+        </div>
+
+
+        <div
+            class="question-text"
+            id="questionText">
+        </div>
+
+
+        <div id="choices">
+        </div>
+
+
+        <div
+            class="result"
+            id="result">
+
+            <h2 id="resultTitle">
+            </h2>
+
+            <p id="explanation">
+            </p>
+
+        </div>
+
+
+        <button
+            class="next-button"
+            id="nextButton"
+            onclick="nextQuestion()">
+
+            次の問題へ
+
+        </button>
+
+
+    </div>
+
+</div>
+
+
+
+<div
+    class="modal"
+    id="keywordModal">
+
+
+    <div class="modal-content">
+
+
+        <h2 id="keywordTitle">
+        </h2>
+
+
+        <p id="keywordDescription">
+        </p>
+
+
+        <div
+            class="related"
+            id="relatedArea">
+
+            <h3>
+                関連用語
+            </h3>
+
+            <ul id="relatedWords">
+            </ul>
+
+        </div>
+
+
+        <button
+            class="close-button"
+            onclick="closeKeyword()">
+
+            閉じる
+
+        </button>
+
+
+    </div>
+
+
+</div>
+
+
+<footer>
+
+    © 2026 FE Learning
+
+</footer>
+
+
+<script src="questions.js"></script>
+
+
+<script>
+
+    /* ====================================
+       設定取得
+
+       設定されていない場合はON
+    ==================================== */
+
+    const soundEnabled =
+
+        localStorage.getItem(
+            "settingSound"
+        ) !== "false";
+
+
+    const shuffleEnabled =
+
+        localStorage.getItem(
+            "settingShuffle"
+        ) !== "false";
+
+
+    const explanationEnabled =
+
+        localStorage.getItem(
+            "settingExplanation"
+        ) !== "false";
+
+
+
+    /* ====================================
+       URL設定
+    ==================================== */
+
+    const params =
+
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    const selectedCategory =
+
+        params.get(
+            "category"
+        );
+
+
+    const selectedCount =
+
+        Number(
+            params.get("count")
+        ) || 10;
+
+
+    const mode =
+
+        params.get(
+            "mode"
+        );
+
+
+    const weakCategory =
+
+        params.get(
+            "weak"
+        );
+
+
+
+    /* ====================================
+       問題作成
+    ==================================== */
+
+    let filteredQuestions = [];
+
+
+
+    /* ====================================
+       シャッフル
+    ==================================== */
+
+    function shuffleArray(array){
+
+
+        for(
+            let i =
+                array.length - 1;
+
+            i > 0;
+
+            i--
+        ){
+
+
+            const j =
+
+                Math.floor(
+
+                    Math.random()
+                    * (i + 1)
+
+                );
+
+
+            [
+                array[i],
+                array[j]
+            ]
+            =
+            [
+                array[j],
+                array[i]
+            ];
+
+        }
+
+    }
+
+
+
+    function shuffleIfEnabled(array){
+
+
+        if(
+            shuffleEnabled
+        ){
+
+            shuffleArray(
+                array
+            );
+
+        }
+
+    }
+
+
+
+    /* ====================================
+       適応型
+    ==================================== */
+
+    if(
+        mode ===
+        "adaptive"
+    ){
+
+
+        document.getElementById(
+            "pageTitle"
+        ).textContent =
+            "適応型学習";
+
+
+        document.getElementById(
+            "modeLabel"
+        ).textContent =
+            "🎯 適応型学習";
+
+
+
+        let weakQuestions =
+
+            questions.filter(
+
+                function(question){
+
+                    return (
+
+                        question.category
+                        === weakCategory
+
+                    );
+
+                }
+
+            );
+
+
+
+        let otherQuestions =
+
+            questions.filter(
+
+                function(question){
+
+                    return (
+
+                        question.category
+                        !== weakCategory
+
+                    );
+
+                }
+
+            );
+
+
+
+        shuffleIfEnabled(
+            weakQuestions
+        );
+
+
+        shuffleIfEnabled(
+            otherQuestions
+        );
+
+
+
+        const weakCount =
+
+            Math.round(
+
+                selectedCount
+                * 0.6
+
+            );
+
+
+        const otherCount =
+
+            selectedCount -
+            weakCount;
+
+
+
+        filteredQuestions = [
+
+            ...weakQuestions.slice(
+                0,
+                weakCount
+            ),
+
+            ...otherQuestions.slice(
+                0,
+                otherCount
+            )
+
+        ];
+
+
+
+        /* 問題不足時 */
+
+        if(
+            filteredQuestions.length
+            <
+            selectedCount
+        ){
+
+
+            const selectedIds =
+
+                filteredQuestions.map(
+
+                    function(question){
+
+                        return question.id;
+
+                    }
+
+                );
+
+
+
+            let remaining =
+
+                questions.filter(
+
+                    function(question){
+
+                        return (
+
+                            !selectedIds.includes(
+                                question.id
+                            )
+
+                        );
+
+                    }
+
+                );
+
+
+            shuffleIfEnabled(
+                remaining
+            );
+
+
+            const shortage =
+
+                selectedCount -
+                filteredQuestions.length;
+
+
+            filteredQuestions.push(
+
+                ...remaining.slice(
+                    0,
+                    shortage
+                )
+
+            );
+
+        }
+
+
+
+        shuffleIfEnabled(
+            filteredQuestions
+        );
+
+
+    }else{
+
+
+        /* ====================================
+           通常学習
+        ==================================== */
+
+        document.getElementById(
+            "pageTitle"
+        ).textContent =
+            "通常学習";
+
+
+        document.getElementById(
+            "modeLabel"
+        ).textContent =
+            "📚 通常学習";
+
+
+
+        if(
+            selectedCategory
+            === "random"
+        ){
+
+
+            filteredQuestions =
+
+                [...questions];
+
+
+        }else{
+
+
+            filteredQuestions =
+
+                questions.filter(
+
+                    function(question){
+
+                        return (
+
+                            question.category
+                            === selectedCategory
+
+                        );
+
+                    }
+
+                );
+
+        }
+
+
+
+        shuffleIfEnabled(
+            filteredQuestions
+        );
+
+
+        filteredQuestions =
+
+            filteredQuestions.slice(
+                0,
+                selectedCount
+            );
+
+    }
+
+
+
+    /* ====================================
+       学習状態
+    ==================================== */
+
+    let currentQuestion = 0;
+
+    let correctCount = 0;
+
+    let answered = false;
+
+    let combo = 0;
+
+    let maxCombo = 0;
+
+
+
+    /* ====================================
+       効果音
+    ==================================== */
+
+    function playTone(
+        frequency,
+        duration
+    ){
+
+
+        if(
+            !soundEnabled
+        ){
+
+            return;
+
+        }
+
+
+        try{
+
+
+            const AudioContextClass =
+
+                window.AudioContext ||
+
+                window.webkitAudioContext;
+
+
+            if(
+                !AudioContextClass
+            ){
+
+                return;
+
+            }
+
+
+            const audioContext =
+
+                new AudioContextClass();
+
+
+            const oscillator =
+
+                audioContext.createOscillator();
+
+
+            const gain =
+
+                audioContext.createGain();
+
+
+            oscillator.connect(
+                gain
+            );
+
+
+            gain.connect(
+                audioContext.destination
+            );
+
+
+            oscillator.frequency.value =
+                frequency;
+
+
+            oscillator.type =
+                "sine";
+
+
+            gain.gain.value =
+                0.1;
+
+
+            oscillator.start();
+
+
+            oscillator.stop(
+
+                audioContext.currentTime
+                + duration
+
+            );
+
+
+            oscillator.onended =
+                function(){
+
+                    audioContext.close();
+
+                };
+
+
+        }catch(error){
+
+            console.log(
+                "効果音を再生できませんでした。"
+            );
+
+        }
+
+    }
+
+
+
+    function playCorrectSound(){
+
+
+        playTone(
+            880,
+            0.12
+        );
+
+    }
+
+
+
+    function playWrongSound(){
+
+
+        playTone(
+            220,
+            0.2
+        );
+
+    }
+
+
+
+    /* ====================================
+       問題表示
+    ==================================== */
+
+    function showQuestion(){
+
+
+        answered =
+            false;
+
+
+        const question =
+
+            filteredQuestions[
+                currentQuestion
+            ];
+
+
+
+        document.getElementById(
+            "questionNumber"
+        ).textContent =
+
+            "問題 " +
+
+            (currentQuestion + 1) +
+
+            " / " +
+
+            filteredQuestions.length;
+
+
+
+        document.getElementById(
+            "score"
+        ).textContent =
+
+            "正解数：" +
+            correctCount;
+
+
+
+        document.getElementById(
+            "combo"
+        ).textContent =
+
+            "連続正解：" +
+            combo;
+
+
+
+        const questionText =
+
+            document.getElementById(
+                "questionText"
+            );
+
+
+
+        if(
+            question.keyword &&
+
+            question.question.includes(
+                question.keyword
+            )
+        ){
+
+
+            const parts =
+
+                question.question.split(
+                    question.keyword
+                );
+
+
+            questionText.innerHTML =
+
+                escapeHTML(
+                    parts[0]
+                ) +
+
+                '<span class="keyword" onclick="openKeyword()">' +
+
+                escapeHTML(
+                    question.keyword
+                ) +
+
+                '</span>' +
+
+                escapeHTML(
+
+                    parts.slice(1).join(
+                        question.keyword
+                    )
+
+                );
+
+
+        }else{
+
+
+            questionText.textContent =
+                question.question;
+
+        }
+
+
+
+        const choicesArea =
+
+            document.getElementById(
+                "choices"
+            );
+
+
+        choicesArea.innerHTML =
+            "";
+
+
+
+        question.choices.forEach(
+
+            function(
+                choice,
+                index
+            ){
+
+
+                const button =
+
+                    document.createElement(
+                        "button"
+                    );
+
+
+                button.className =
+                    "choice";
+
+
+                button.textContent =
+
+                    (index + 1) +
+
+                    "．" +
+
+                    choice;
+
+
+                button.onclick =
+
+                    function(){
+
+                        checkAnswer(
+                            button,
+                            index
+                        );
+
+                    };
+
+
+                choicesArea.appendChild(
+                    button
+                );
+
+            }
+
+        );
+
+
+
+        document.getElementById(
+            "result"
+        ).style.display =
+            "none";
+
+
+        document.getElementById(
+            "nextButton"
+        ).style.display =
+            "none";
+
+    }
+
+
+
+    /* ====================================
+       正誤判定
+    ==================================== */
+
+    function checkAnswer(
+        button,
+        selectedAnswer
+    ){
+
+
+        if(answered){
+
+            return;
+
+        }
+
+
+        answered =
+            true;
+
+
+
+        const question =
+
+            filteredQuestions[
+                currentQuestion
+            ];
+
+
+
+        const buttons =
+
+            document.querySelectorAll(
+                ".choice"
+            );
+
+
+
+        if(
+            selectedAnswer
+            === question.answer
+        ){
+
+
+            button.classList.add(
+                "correct"
+            );
+
+
+            document.getElementById(
+                "resultTitle"
+            ).textContent =
+                "○ 正解！";
+
+
+            playCorrectSound();
+
+
+            correctCount++;
+
+
+            combo++;
+
+
+            if(
+                combo >
+                maxCombo
+            ){
+
+                maxCombo =
+                    combo;
+
+            }
+
+
+        }else{
+
+
+            button.classList.add(
+                "wrong"
+            );
+
+
+            buttons[
+                question.answer
+            ].classList.add(
+                "correct"
+            );
+
+
+            document.getElementById(
+                "resultTitle"
+            ).textContent =
+                "× 不正解";
+
+
+            playWrongSound();
+
+
+            combo =
+                0;
+
+
+            saveWeakQuestion(
+                question.id
+            );
+
+        }
+
+
+
+        document.getElementById(
+            "score"
+        ).textContent =
+
+            "正解数：" +
+            correctCount;
+
+
+        document.getElementById(
+            "combo"
+        ).textContent =
+
+            "連続正解：" +
+            combo;
+
+
+
+        /* =========================
+           解説設定
+        ========================= */
+
+        const explanation =
+
+            document.getElementById(
+                "explanation"
+            );
+
+
+        if(
+            explanationEnabled
+        ){
+
+
+            explanation.style.display =
+                "block";
+
+
+            explanation.textContent =
+                question.explanation;
+
+
+        }else{
+
+
+            explanation.style.display =
+                "none";
+
+        }
+
+
+
+        document.getElementById(
+            "result"
+        ).style.display =
+            "block";
+
+
+        document.getElementById(
+            "nextButton"
+        ).style.display =
+            "block";
+
+    }
+
+
+
+    /* ====================================
+       苦手問題
+    ==================================== */
+
+    function saveWeakQuestion(
+        questionId
+    ){
+
+
+        let weakQuestions =
+
+            JSON.parse(
+
+                localStorage.getItem(
+                    "weakQuestions"
+                )
+
+            ) || [];
+
+
+        if(
+            !weakQuestions.includes(
+                questionId
+            )
+        ){
+
+
+            weakQuestions.push(
+                questionId
+            );
+
+
+            localStorage.setItem(
+
+                "weakQuestions",
+
+                JSON.stringify(
+                    weakQuestions
+                )
+
+            );
+
+        }
+
+    }
+
+
+
+    /* ====================================
+       履歴保存
+    ==================================== */
+
+    function saveStudyHistory(
+        correct,
+        total,
+        rate,
+        maxCombo
+    ){
+
+
+        let history =
+
+            JSON.parse(
+
+                localStorage.getItem(
+                    "studyHistory"
+                )
+
+            ) || [];
+
+
+        const now =
+            new Date();
+
+
+        let historyCategory =
+            selectedCategory;
+
+
+        if(
+            mode ===
+            "adaptive"
+        ){
+
+
+            historyCategory =
+                "adaptive";
+
+        }
+
+
+
+        const record = {
+
+
+            date:
+                now.toLocaleString(
+                    "ja-JP"
+                ),
+
+
+            correct:
+                correct,
+
+
+            total:
+                total,
+
+
+            rate:
+                rate,
+
+
+            maxCombo:
+                maxCombo,
+
+
+            category:
+                historyCategory,
+
+
+            weakCategory:
+
+                mode === "adaptive"
+                ? weakCategory
+                : null
+
+        };
+
+
+        history.unshift(
+            record
+        );
+
+
+        localStorage.setItem(
+
+            "studyHistory",
+
+            JSON.stringify(
+                history
+            )
+
+        );
+
+    }
+
+
+
+    /* ====================================
+       EXP
+    ==================================== */
+
+    function saveExp(
+        correct,
+        maxCombo
+    ){
+
+
+        const earnedExp =
+
+            correct * 10 +
+
+            maxCombo * 5;
+
+
+        let totalExp =
+
+            Number(
+
+                localStorage.getItem(
+                    "totalExp"
+                )
+
+            ) || 0;
+
+
+        totalExp +=
+            earnedExp;
+
+
+        localStorage.setItem(
+
+            "totalExp",
+
+            totalExp
+
+        );
+
+
+        return earnedExp;
+
+    }
+
+
+
+    /* ====================================
+       用語説明
+    ==================================== */
+
+    function openKeyword(){
+
+
+        const question =
+
+            filteredQuestions[
+                currentQuestion
+            ];
+
+
+        document.getElementById(
+            "keywordTitle"
+        ).textContent =
+
+            question.keyword ||
+            "用語説明";
+
+
+        document.getElementById(
+            "keywordDescription"
+        ).textContent =
+
+            question.keywordExplanation ||
+
+            "説明はまだ登録されていません。";
+
+
+
+        const relatedWords =
+
+            document.getElementById(
+                "relatedWords"
+            );
+
+
+        const relatedArea =
+
+            document.getElementById(
+                "relatedArea"
+            );
+
+
+        relatedWords.innerHTML =
+            "";
+
+
+
+        if(
+            question.relatedWords &&
+
+            question.relatedWords.length
+            > 0
+        ){
+
+
+            relatedArea.style.display =
+                "block";
+
+
+            question.relatedWords.forEach(
+
+                function(word){
+
+
+                    const li =
+
+                        document.createElement(
+                            "li"
+                        );
+
+
+                    li.textContent =
+                        word;
+
+
+                    relatedWords.appendChild(
+                        li
+                    );
+
+                }
+
+            );
+
+
+        }else{
+
+
+            relatedArea.style.display =
+                "none";
+
+        }
+
+
+
+        document.getElementById(
+            "keywordModal"
+        ).style.display =
+            "flex";
+
+    }
+
+
+
+    function closeKeyword(){
+
+
+        document.getElementById(
+            "keywordModal"
+        ).style.display =
+            "none";
+
+    }
+
+
+
+    document.getElementById(
+        "keywordModal"
+    ).addEventListener(
+
+        "click",
+
+        function(event){
+
+
+            if(
+                event.target ===
+                this
+            ){
+
+                closeKeyword();
+
+            }
+
+        }
+
+    );
+
+
+
+    /* ====================================
+       次の問題
+    ==================================== */
+
+    function nextQuestion(){
+
+
+        currentQuestion++;
+
+
+
+        if(
+            currentQuestion
+            <
+            filteredQuestions.length
+        ){
+
+
+            showQuestion();
+
+
+        }else{
+
+
+            const correctRate =
+
+                Math.round(
+
+                    correctCount /
+
+                    filteredQuestions.length *
+
+                    100
+
+                );
+
+
+
+            saveStudyHistory(
+
+                correctCount,
+
+                filteredQuestions.length,
+
+                correctRate,
+
+                maxCombo
+
+            );
+
+
+
+            const earnedExp =
+
+                saveExp(
+
+                    correctCount,
+
+                    maxCombo
+
+                );
+
+
+
+            location.href =
+
+                "result.html?correct=" +
+
+                correctCount +
+
+                "&total=" +
+
+                filteredQuestions.length +
+
+                "&rate=" +
+
+                correctRate +
+
+                "&combo=" +
+
+                maxCombo +
+
+                "&exp=" +
+
+                earnedExp;
+
+        }
+
+    }
+
+
+
+    /* ====================================
+       HTML特殊文字
+    ==================================== */
+
+    function escapeHTML(text){
+
+
+        const div =
+
+            document.createElement(
+                "div"
+            );
+
+
+        div.textContent =
+            text;
+
+
+        return div.innerHTML;
+
+    }
+
+
+
+    /* ====================================
+       開始
+    ==================================== */
+
+    if(
+        filteredQuestions.length
+        === 0
+    ){
+
+
+        alert(
+
+            "出題できる問題がありません。"
+
+        );
+
+
+        location.href =
+            "index.html";
+
+
+    }else{
+
+
+        showQuestion();
+
+    }
+
+
+</script>
+
+
+</body>
+
+</html>

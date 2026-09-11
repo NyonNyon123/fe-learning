@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>適応型学習 - FE Learning</title>
+
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:"Yu Gothic UI",sans-serif;
+        }
+
+
+        body{
+            background:#f4f7fb;
+        }
+
+
+        header{
+            background:#0066cc;
+            color:white;
+            padding:25px;
+            text-align:center;
+            box-shadow:0 3px 8px rgba(0,0,0,.2);
+        }
+
+
+        header h1{
+            font-size:34px;
+        }
+
+
+        header p{
+            margin-top:10px;
+        }
+
+
+        .container{
+            width:90%;
+            max-width:900px;
+            margin:40px auto;
+        }
+
+
+        .back{
+            display:inline-block;
+            margin-bottom:20px;
+            color:#0066cc;
+            text-decoration:none;
+        }
+
+
+        .box{
+            background:white;
+            border-radius:15px;
+            padding:30px;
+            margin-bottom:25px;
+            box-shadow:0 4px 10px rgba(0,0,0,.15);
+        }
+
+
+        .box h2{
+            color:#0066cc;
+            margin-bottom:20px;
+        }
+
+
+        .description{
+            color:#555;
+            line-height:1.7;
+            margin-bottom:25px;
+        }
+
+
+        .category{
+            margin-bottom:25px;
+        }
+
+
+        .category-name{
+            display:flex;
+            justify-content:space-between;
+            margin-bottom:8px;
+            gap:10px;
+        }
+
+
+        .category-name strong{
+            color:#333;
+        }
+
+
+        .bar{
+            width:100%;
+            height:22px;
+            background:#ddd;
+            border-radius:20px;
+            overflow:hidden;
+        }
+
+
+        .bar-fill{
+            height:100%;
+            background:#0066cc;
+            transition:.3s;
+        }
+
+
+        .question-progress{
+            margin-top:7px;
+            color:#777;
+            font-size:14px;
+        }
+
+
+        .weak{
+            margin-top:25px;
+            padding:20px;
+            background:#fff3cd;
+            border-radius:10px;
+            line-height:1.7;
+        }
+
+
+        .ready{
+            background:#d4edda;
+        }
+
+
+        .info{
+            margin-top:15px;
+            padding:15px;
+            background:#eef6ff;
+            border-radius:10px;
+            line-height:1.7;
+        }
+
+
+        select{
+            width:100%;
+            padding:12px;
+            margin-top:15px;
+            border-radius:8px;
+            border:1px solid #ccc;
+            font-size:16px;
+        }
+
+
+        .start-button{
+            width:100%;
+            margin-top:20px;
+            padding:17px;
+            background:#0066cc;
+            color:white;
+            border:none;
+            border-radius:10px;
+            font-size:18px;
+            cursor:pointer;
+        }
+
+
+        .start-button:hover{
+            background:#004f9e;
+        }
+
+
+        .start-button:disabled{
+            background:#aaa;
+            cursor:not-allowed;
+        }
+
+
+        footer{
+            text-align:center;
+            padding:25px;
+            color:#777;
+        }
+
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <h1>FE Learning</h1>
+
+    <p>適応型学習</p>
+
+</header>
+
+
+<div class="container">
+
+
+    <a href="index.html"
+       class="back">
+
+        ← トップページに戻る
+
+    </a>
+
+
+
+    <div class="box">
+
+
+        <h2>
+            分野別の学習状況
+        </h2>
+
+
+        <p class="description">
+
+            各分野で10問以上解答すると、
+            学習履歴をもとに苦手分野を判定します。
+
+        </p>
+
+
+
+        <!-- テクノロジ -->
+
+        <div class="category">
+
+
+            <div class="category-name">
+
+                <strong>
+                    テクノロジ系
+                </strong>
+
+                <span id="technologyRate">
+                    未判定
+                </span>
+
+            </div>
+
+
+            <div class="bar">
+
+                <div
+                    class="bar-fill"
+                    id="technologyBar"
+                    style="width:0%;">
+                </div>
+
+            </div>
+
+
+            <div
+                class="question-progress"
+                id="technologyProgress">
+
+                0 / 10問
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- マネジメント -->
+
+        <div class="category">
+
+
+            <div class="category-name">
+
+                <strong>
+                    マネジメント系
+                </strong>
+
+                <span id="managementRate">
+                    未判定
+                </span>
+
+            </div>
+
+
+            <div class="bar">
+
+                <div
+                    class="bar-fill"
+                    id="managementBar"
+                    style="width:0%;">
+                </div>
+
+            </div>
+
+
+            <div
+                class="question-progress"
+                id="managementProgress">
+
+                0 / 10問
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ストラテジ -->
+
+        <div class="category">
+
+
+            <div class="category-name">
+
+                <strong>
+                    ストラテジ系
+                </strong>
+
+                <span id="strategyRate">
+                    未判定
+                </span>
+
+            </div>
+
+
+            <div class="bar">
+
+                <div
+                    class="bar-fill"
+                    id="strategyBar"
+                    style="width:0%;">
+                </div>
+
+            </div>
+
+
+            <div
+                class="question-progress"
+                id="strategyProgress">
+
+                0 / 10問
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- 判定 -->
+
+        <div
+            class="weak"
+            id="weakBox">
+
+            <strong>
+                判定結果：
+            </strong>
+
+            <span id="weakCategory">
+                判定保留
+            </span>
+
+        </div>
+
+
+
+        <div class="info">
+
+            適応型学習では、
+            正答率が最も低い分野を苦手分野として判定し、
+            苦手分野から約60％、
+            その他の分野から約40％の問題を出題します。
+
+        </div>
+
+
+    </div>
+
+
+
+    <div class="box">
+
+
+        <h2>
+            適応型学習を開始
+        </h2>
+
+
+        <p id="startMessage">
+
+            各分野で10問以上解答すると利用できます。
+
+        </p>
+
+
+        <select id="questionCount">
+
+            <option value="10">
+                10問
+            </option>
+
+            <option value="20">
+                20問
+            </option>
+
+            <option value="30">
+                30問
+            </option>
+
+        </select>
+
+
+        <button
+            class="start-button"
+            id="startButton"
+            onclick="startAdaptive()"
+            disabled>
+
+            適応型学習を開始する
+
+        </button>
+
+
+    </div>
+
+
+</div>
+
+
+
+<footer>
+
+    © 2026 FE Learning
+
+</footer>
+
+
+
+<script>
+
+
+    /* ======================================
+       判定に必要な最低問題数
+    ====================================== */
+
+    const MIN_QUESTIONS = 10;
+
+
+
+    /* ======================================
+       学習履歴取得
+    ====================================== */
+
+    const history =
+
+        JSON.parse(
+
+            localStorage.getItem(
+                "studyHistory"
+            )
+
+        ) || [];
+
+
+
+    /* ======================================
+       分野別成績を計算
+    ====================================== */
+
+    function calculateCategoryData(category){
+
+
+        let total = 0;
+
+        let correct = 0;
+
+
+
+        history.forEach(
+            function(record){
+
+
+                if(
+                    record.category
+                    === category
+                ){
+
+
+                    total +=
+                        record.total;
+
+
+                    correct +=
+                        record.correct;
+
+
+                }
+
+
+            }
+        );
+
+
+
+        let rate = null;
+
+
+        if(total > 0){
+
+
+            rate =
+                Math.round(
+
+                    correct /
+                    total *
+                    100
+
+                );
+
+
+        }
+
+
+
+        return {
+
+            total: total,
+
+            correct: correct,
+
+            rate: rate
+
+        };
+
+
+    }
+
+
+
+    /* ======================================
+       3分野のデータ取得
+    ====================================== */
+
+    const technology =
+        calculateCategoryData(
+            "technology"
+        );
+
+
+    const management =
+        calculateCategoryData(
+            "management"
+        );
+
+
+    const strategy =
+        calculateCategoryData(
+            "strategy"
+        );
+
+
+
+    /* ======================================
+       画面表示
+    ====================================== */
+
+    function showCategoryData(
+        data,
+        rateId,
+        barId,
+        progressId
+    ){
+
+
+        /* 正答率 */
+
+
+        if(data.total === 0){
+
+
+            document.getElementById(
+                rateId
+            ).textContent =
+                "未学習";
+
+
+        }else{
+
+
+            document.getElementById(
+                rateId
+            ).textContent =
+                data.rate + "%";
+
+
+        }
+
+
+
+        /* 10問までの進捗 */
+
+
+        const progressRate =
+
+            Math.min(
+
+                data.total /
+                MIN_QUESTIONS *
+                100,
+
+                100
+
+            );
+
+
+        document.getElementById(
+            barId
+        ).style.width =
+
+            progressRate + "%";
+
+
+
+        /* 問題数表示 */
+
+
+        if(
+            data.total
+            >= MIN_QUESTIONS
+        ){
+
+
+            document.getElementById(
+                progressId
+            ).textContent =
+
+                data.total +
+                "問解答済み ✓";
+
+
+        }else{
+
+
+            document.getElementById(
+                progressId
+            ).textContent =
+
+                data.total +
+                " / " +
+                MIN_QUESTIONS +
+                "問";
+
+
+        }
+
+
+    }
+
+
+
+    showCategoryData(
+
+        technology,
+
+        "technologyRate",
+
+        "technologyBar",
+
+        "technologyProgress"
+
+    );
+
+
+    showCategoryData(
+
+        management,
+
+        "managementRate",
+
+        "managementBar",
+
+        "managementProgress"
+
+    );
+
+
+    showCategoryData(
+
+        strategy,
+
+        "strategyRate",
+
+        "strategyBar",
+
+        "strategyProgress"
+
+    );
+
+
+
+    /* ======================================
+       判定可能か確認
+    ====================================== */
+
+    const technologyReady =
+        technology.total
+        >= MIN_QUESTIONS;
+
+
+    const managementReady =
+        management.total
+        >= MIN_QUESTIONS;
+
+
+    const strategyReady =
+        strategy.total
+        >= MIN_QUESTIONS;
+
+
+
+    const allReady =
+
+        technologyReady &&
+        managementReady &&
+        strategyReady;
+
+
+
+    let weakCategory = null;
+
+
+
+    /* ======================================
+       苦手判定
+    ====================================== */
+
+    if(allReady){
+
+
+        const categoryData = [
+
+            {
+
+                category:
+                    "technology",
+
+                name:
+                    "テクノロジ系",
+
+                rate:
+                    technology.rate
+
+            },
+
+
+            {
+
+                category:
+                    "management",
+
+                name:
+                    "マネジメント系",
+
+                rate:
+                    management.rate
+
+            },
+
+
+            {
+
+                category:
+                    "strategy",
+
+                name:
+                    "ストラテジ系",
+
+                rate:
+                    strategy.rate
+
+            }
+
+        ];
+
+
+
+        /* 正答率の低い順 */
+
+
+        categoryData.sort(
+
+            function(a,b){
+
+                return a.rate - b.rate;
+
+            }
+
+        );
+
+
+
+        weakCategory =
+            categoryData[0].category;
+
+
+
+        /* 判定結果表示 */
+
+
+        document.getElementById(
+            "weakCategory"
+        ).textContent =
+
+            categoryData[0].name +
+
+            "（正答率 " +
+
+            categoryData[0].rate +
+
+            "%）";
+
+
+
+        document.getElementById(
+            "weakBox"
+        ).classList.add(
+            "ready"
+        );
+
+
+
+        /* ボタン有効 */
+
+
+        document.getElementById(
+            "startButton"
+        ).disabled =
+            false;
+
+
+
+        document.getElementById(
+            "startMessage"
+        ).textContent =
+
+            "苦手分野を優先した問題を出題します。";
+
+
+    }else{
+
+
+        /* ==================================
+           まだ判定できない場合
+        ================================== */
+
+
+        let missing = [];
+
+
+
+        if(!technologyReady){
+
+
+            missing.push(
+
+                "テクノロジ系 あと" +
+
+                (
+                    MIN_QUESTIONS -
+                    technology.total
+                ) +
+
+                "問"
+
+            );
+
+
+        }
+
+
+
+        if(!managementReady){
+
+
+            missing.push(
+
+                "マネジメント系 あと" +
+
+                (
+                    MIN_QUESTIONS -
+                    management.total
+                ) +
+
+                "問"
+
+            );
+
+
+        }
+
+
+
+        if(!strategyReady){
+
+
+            missing.push(
+
+                "ストラテジ系 あと" +
+
+                (
+                    MIN_QUESTIONS -
+                    strategy.total
+                ) +
+
+                "問"
+
+            );
+
+
+        }
+
+
+
+        document.getElementById(
+            "weakCategory"
+        ).innerHTML =
+
+            "判定保留<br>" +
+
+            missing.join(
+                "<br>"
+            );
+
+
+
+        document.getElementById(
+            "startButton"
+        ).disabled =
+            true;
+
+
+    }
+
+
+
+    /* ======================================
+       適応型学習開始
+    ====================================== */
+
+    function startAdaptive(){
+
+
+        if(
+            weakCategory === null
+        ){
+
+
+            alert(
+
+                "まだ苦手分野を判定できません。"
+
+            );
+
+
+            return;
+
+
+        }
+
+
+
+        const count =
+
+            document.getElementById(
+                "questionCount"
+            ).value;
+
+
+
+        location.href =
+
+            "question.html?mode=adaptive" +
+
+            "&weak=" +
+
+            weakCategory +
+
+            "&count=" +
+
+            count;
+
+
+    }
+
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学習履歴 - FE Learning</title>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:"Yu Gothic UI",sans-serif;
+        }
+
+        body{
+            background:#f4f7fb;
+        }
+
+        header{
+            background:#0066cc;
+            color:white;
+            padding:25px;
+            text-align:center;
+            box-shadow:0 3px 8px rgba(0,0,0,.2);
+        }
+
+        .container{
+            width:90%;
+            max-width:1000px;
+            margin:40px auto;
+        }
+
+        .back{
+            display:inline-block;
+            margin-bottom:20px;
+            color:#0066cc;
+            text-decoration:none;
+        }
+
+        .summary{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+            gap:20px;
+            margin-bottom:30px;
+        }
+
+        .summary-card{
+            background:white;
+            padding:25px;
+            border-radius:15px;
+            text-align:center;
+            box-shadow:0 4px 10px rgba(0,0,0,.12);
+        }
+
+        .summary-card p{
+            color:#666;
+            margin-bottom:10px;
+        }
+
+        .summary-card strong{
+            font-size:28px;
+            color:#0066cc;
+        }
+
+        .history-box{
+            background:white;
+            border-radius:15px;
+            padding:25px;
+            box-shadow:0 4px 10px rgba(0,0,0,.12);
+        }
+
+        .history-box h2{
+            color:#0066cc;
+            margin-bottom:20px;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+        }
+
+        th,
+        td{
+            padding:14px;
+            border-bottom:1px solid #ddd;
+            text-align:center;
+        }
+
+        th{
+            background:#eef6ff;
+        }
+
+        .empty{
+            padding:30px;
+            text-align:center;
+            color:#666;
+        }
+
+        footer{
+            text-align:center;
+            padding:25px;
+            color:#777;
+        }
+
+        @media(max-width:700px){
+
+            table{
+                font-size:13px;
+            }
+
+            th,
+            td{
+                padding:9px 5px;
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>FE Learning</h1>
+    <p>学習履歴</p>
+</header>
+
+<div class="container">
+
+    <a href="index.html" class="back">
+        ← トップページに戻る
+    </a>
+
+    <div class="summary">
+
+        <div class="summary-card">
+            <p>学習回数</p>
+            <strong id="studyCount">0</strong>
+        </div>
+
+        <div class="summary-card">
+            <p>総問題数</p>
+            <strong id="totalQuestions">0</strong>
+        </div>
+
+        <div class="summary-card">
+            <p>平均正答率</p>
+            <strong id="averageRate">0%</strong>
+        </div>
+
+        <div class="summary-card">
+            <p>最高連続正解</p>
+            <strong id="bestCombo">0</strong>
+        </div>
+
+    </div>
+
+    <div class="history-box">
+
+        <h2>学習記録</h2>
+
+        <div id="historyArea"></div>
+
+    </div>
+
+</div>
+
+<footer>
+    © 2026 FE Learning
+</footer>
+
+<script>
+
+    const history =
+        JSON.parse(
+            localStorage.getItem("studyHistory")
+        ) || [];
+
+
+    const studyCount =
+        history.length;
+
+
+    let totalQuestions = 0;
+    let totalCorrect = 0;
+    let bestCombo = 0;
+
+
+    history.forEach(function(record){
+
+        totalQuestions += record.total;
+
+        totalCorrect += record.correct;
+
+        if(record.maxCombo > bestCombo){
+
+            bestCombo =
+                record.maxCombo;
+
+        }
+
+    });
+
+
+    let averageRate = 0;
+
+    if(totalQuestions > 0){
+
+        averageRate =
+            Math.round(
+                totalCorrect /
+                totalQuestions *
+                100
+            );
+
+    }
+
+
+    document.getElementById(
+        "studyCount"
+    ).textContent =
+        studyCount;
+
+
+    document.getElementById(
+        "totalQuestions"
+    ).textContent =
+        totalQuestions;
+
+
+    document.getElementById(
+        "averageRate"
+    ).textContent =
+        averageRate + "%";
+
+
+    document.getElementById(
+        "bestCombo"
+    ).textContent =
+        bestCombo;
+
+
+    const historyArea =
+        document.getElementById(
+            "historyArea"
+        );
+
+
+    if(history.length === 0){
+
+        historyArea.innerHTML = `
+
+            <div class="empty">
+                まだ学習履歴がありません。
+            </div>
+
+        `;
+
+    }else{
+
+        let html = `
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>日時</th>
+                        <th>分野</th>
+                        <th>正解</th>
+                        <th>正答率</th>
+                        <th>最高連続</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+        `;
+
+
+        history.forEach(function(record){
+
+            let categoryName;
+
+            if(record.category === "technology"){
+
+                categoryName =
+                    "テクノロジ";
+
+            }else if(record.category === "management"){
+
+                categoryName =
+                    "マネジメント";
+
+            }else if(record.category === "strategy"){
+
+                categoryName =
+                    "ストラテジ";
+
+            }else{
+
+                categoryName =
+                    "ランダム";
+
+            }
+
+
+            html += `
+
+                <tr>
+                    <td>${record.date}</td>
+                    <td>${categoryName}</td>
+                    <td>
+                        ${record.correct}
+                        /
+                        ${record.total}
+                    </td>
+                    <td>
+                        ${record.rate}%
+                    </td>
+                    <td>
+                        ${record.maxCombo}
+                    </td>
+                </tr>
+
+            `;
+
+        });
+
+
+        html += `
+
+                </tbody>
+
+            </table>
+
+        `;
+
+
+        historyArea.innerHTML =
+            html;
+
+    }
+
+</script>
+
+</body>
+</html>

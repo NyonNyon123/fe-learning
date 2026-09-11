@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>設定 - FE Learning</title>
+
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:"Yu Gothic UI",sans-serif;
+        }
+
+
+        body{
+            background:#f4f7fb;
+        }
+
+
+        header{
+            background:#0066cc;
+            color:white;
+            padding:25px;
+            text-align:center;
+            box-shadow:0 3px 8px rgba(0,0,0,.2);
+        }
+
+
+        header h1{
+            font-size:34px;
+        }
+
+
+        header p{
+            margin-top:10px;
+        }
+
+
+        .container{
+            width:90%;
+            max-width:800px;
+            margin:40px auto;
+        }
+
+
+        .back{
+            display:inline-block;
+            margin-bottom:20px;
+            color:#0066cc;
+            text-decoration:none;
+        }
+
+
+        .settings-box{
+            background:white;
+            border-radius:15px;
+            padding:30px;
+            box-shadow:0 4px 10px rgba(0,0,0,.15);
+        }
+
+
+        .settings-box h2{
+            color:#0066cc;
+            margin-bottom:10px;
+        }
+
+
+        .description{
+            color:#666;
+            line-height:1.7;
+            margin-bottom:25px;
+        }
+
+
+        .setting-item{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:20px;
+
+            padding:25px 0;
+
+            border-bottom:1px solid #ddd;
+        }
+
+
+        .setting-item:last-of-type{
+            border-bottom:none;
+        }
+
+
+        .setting-left h3{
+            margin-bottom:8px;
+            color:#333;
+        }
+
+
+        .setting-left p{
+            color:#777;
+            font-size:14px;
+            line-height:1.6;
+        }
+
+
+        /* =========================
+           スイッチ
+        ========================= */
+
+        .switch{
+            position:relative;
+            display:inline-block;
+            width:60px;
+            height:34px;
+            flex-shrink:0;
+        }
+
+
+        .switch input{
+            opacity:0;
+            width:0;
+            height:0;
+        }
+
+
+        .slider{
+            position:absolute;
+            cursor:pointer;
+
+            top:0;
+            left:0;
+            right:0;
+            bottom:0;
+
+            background:#ccc;
+
+            transition:.3s;
+
+            border-radius:34px;
+        }
+
+
+        .slider:before{
+            position:absolute;
+            content:"";
+
+            height:26px;
+            width:26px;
+
+            left:4px;
+            bottom:4px;
+
+            background:white;
+
+            transition:.3s;
+
+            border-radius:50%;
+        }
+
+
+        input:checked + .slider{
+            background:#0066cc;
+        }
+
+
+        input:checked + .slider:before{
+            transform:translateX(26px);
+        }
+
+
+        /* =========================
+           保存状態
+        ========================= */
+
+        .saved{
+            margin-top:25px;
+            padding:15px;
+            text-align:center;
+            border-radius:10px;
+            background:#d4edda;
+            color:#155724;
+
+            opacity:0;
+            transition:.3s;
+        }
+
+
+        .saved.show{
+            opacity:1;
+        }
+
+
+        /* =========================
+           データリセット
+        ========================= */
+
+        .danger-box{
+            margin-top:30px;
+            padding:25px;
+            border-radius:15px;
+            background:#fff3f3;
+            border:1px solid #f1b0b7;
+        }
+
+
+        .danger-box h2{
+            color:#dc3545;
+            margin-bottom:10px;
+        }
+
+
+        .danger-box p{
+            color:#666;
+            line-height:1.7;
+        }
+
+
+        .reset-button{
+            width:100%;
+            margin-top:20px;
+            padding:16px;
+
+            border:none;
+            border-radius:10px;
+
+            background:#dc3545;
+            color:white;
+
+            font-size:17px;
+            font-weight:bold;
+
+            cursor:pointer;
+        }
+
+
+        .reset-button:hover{
+            background:#b52a37;
+        }
+
+
+        footer{
+            text-align:center;
+            padding:25px;
+            color:#777;
+        }
+
+
+        @media(max-width:600px){
+
+            .setting-item{
+                align-items:flex-start;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <h1>
+        FE Learning
+    </h1>
+
+    <p>
+        設定
+    </p>
+
+</header>
+
+
+<div class="container">
+
+
+    <a
+        href="index.html"
+        class="back">
+
+        ← トップページに戻る
+
+    </a>
+
+
+
+    <div class="settings-box">
+
+
+        <h2>
+            ⚙ 学習設定
+        </h2>
+
+
+        <p class="description">
+
+            自分の学習スタイルに合わせて
+            問題演習の設定を変更できます。
+
+        </p>
+
+
+
+        <!-- 効果音 -->
+
+        <div class="setting-item">
+
+
+            <div class="setting-left">
+
+                <h3>
+                    🔊 効果音
+                </h3>
+
+                <p>
+                    正解・不正解時に
+                    効果音を再生します。
+                </p>
+
+            </div>
+
+
+            <label class="switch">
+
+                <input
+                    type="checkbox"
+                    id="soundSetting"
+                    onchange="saveSettings()">
+
+                <span class="slider"></span>
+
+            </label>
+
+
+        </div>
+
+
+
+        <!-- シャッフル -->
+
+        <div class="setting-item">
+
+
+            <div class="setting-left">
+
+                <h3>
+                    🔀 問題をランダムに出題
+                </h3>
+
+                <p>
+                    ONにすると、
+                    問題の出題順を毎回変更します。
+                </p>
+
+            </div>
+
+
+            <label class="switch">
+
+                <input
+                    type="checkbox"
+                    id="shuffleSetting"
+                    onchange="saveSettings()">
+
+                <span class="slider"></span>
+
+            </label>
+
+
+        </div>
+
+
+
+        <!-- 解説 -->
+
+        <div class="setting-item">
+
+
+            <div class="setting-left">
+
+                <h3>
+                    📖 回答後に解説を表示
+                </h3>
+
+                <p>
+                    回答後に問題の解説を
+                    表示するか設定します。
+                </p>
+
+            </div>
+
+
+            <label class="switch">
+
+                <input
+                    type="checkbox"
+                    id="explanationSetting"
+                    onchange="saveSettings()">
+
+                <span class="slider"></span>
+
+            </label>
+
+
+        </div>
+
+
+
+        <div
+            class="saved"
+            id="savedMessage">
+
+            ✓ 設定を保存しました
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =========================
+         データリセット
+    ========================== -->
+
+    <div class="danger-box">
+
+
+        <h2>
+            🗑 学習データリセット
+        </h2>
+
+
+        <p>
+
+            学習履歴、苦手問題、EXP、レベル、
+            ランキングなどの学習データを
+            初期状態に戻します。
+
+            <br><br>
+
+            ※設定内容はリセットされません。
+
+        </p>
+
+
+        <button
+            class="reset-button"
+            onclick="resetStudyData()">
+
+            学習データをリセットする
+
+        </button>
+
+
+    </div>
+
+
+</div>
+
+
+<footer>
+
+    © 2026 FE Learning
+
+</footer>
+
+
+<script>
+
+
+    /* ========================================
+       保存済み設定を読み込む
+
+       初回はすべてON
+    ======================================== */
+
+    function loadSettings(){
+
+
+        const sound =
+            localStorage.getItem(
+                "settingSound"
+            );
+
+
+        const shuffle =
+            localStorage.getItem(
+                "settingShuffle"
+            );
+
+
+        const explanation =
+            localStorage.getItem(
+                "settingExplanation"
+            );
+
+
+
+        document.getElementById(
+            "soundSetting"
+        ).checked =
+
+            sound !== "false";
+
+
+
+        document.getElementById(
+            "shuffleSetting"
+        ).checked =
+
+            shuffle !== "false";
+
+
+
+        document.getElementById(
+            "explanationSetting"
+        ).checked =
+
+            explanation !== "false";
+
+
+    }
+
+
+
+    /* ========================================
+       設定保存
+    ======================================== */
+
+    function saveSettings(){
+
+
+        const sound =
+
+            document.getElementById(
+                "soundSetting"
+            ).checked;
+
+
+        const shuffle =
+
+            document.getElementById(
+                "shuffleSetting"
+            ).checked;
+
+
+        const explanation =
+
+            document.getElementById(
+                "explanationSetting"
+            ).checked;
+
+
+
+        localStorage.setItem(
+
+            "settingSound",
+
+            sound
+
+        );
+
+
+        localStorage.setItem(
+
+            "settingShuffle",
+
+            shuffle
+
+        );
+
+
+        localStorage.setItem(
+
+            "settingExplanation",
+
+            explanation
+
+        );
+
+
+
+        showSavedMessage();
+
+    }
+
+
+
+    /* ========================================
+       保存メッセージ
+    ======================================== */
+
+    let saveTimer;
+
+
+    function showSavedMessage(){
+
+
+        const message =
+
+            document.getElementById(
+                "savedMessage"
+            );
+
+
+        message.classList.add(
+            "show"
+        );
+
+
+        clearTimeout(
+            saveTimer
+        );
+
+
+        saveTimer = setTimeout(
+
+            function(){
+
+                message.classList.remove(
+                    "show"
+                );
+
+            },
+
+            1500
+
+        );
+
+    }
+
+
+
+    /* ========================================
+       学習データリセット
+    ======================================== */
+
+    function resetStudyData(){
+
+
+        const result = confirm(
+
+            "本当に学習データをリセットしますか？\n\n" +
+
+            "学習履歴・苦手問題・EXP・レベル・ランキングなどが削除されます。"
+
+        );
+
+
+        if(!result){
+
+            return;
+
+        }
+
+
+
+        /* 学習履歴 */
+
+        localStorage.removeItem(
+            "studyHistory"
+        );
+
+
+        /* 苦手問題 */
+
+        localStorage.removeItem(
+            "weakQuestions"
+        );
+
+
+        /* EXP・レベル */
+
+        localStorage.removeItem(
+            "totalExp"
+        );
+
+
+        /* 将来追加する分析データにも対応 */
+
+        localStorage.removeItem(
+            "categoryStats"
+        );
+
+
+        localStorage.removeItem(
+            "questionStats"
+        );
+
+
+
+        alert(
+
+            "学習データをリセットしました。"
+
+        );
+
+
+        location.href =
+            "index.html";
+
+    }
+
+
+
+    /* ========================================
+       初期表示
+    ======================================== */
+
+    loadSettings();
+
+
+</script>
+
+
+</body>
+
+</html>

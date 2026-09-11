@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>実績・称号 - FE Learning</title>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:"Yu Gothic UI",sans-serif;
+        }
+
+        body{
+            background:#f4f7fb;
+        }
+
+        header{
+            background:#0066cc;
+            color:white;
+            padding:25px;
+            text-align:center;
+            box-shadow:0 3px 8px rgba(0,0,0,.2);
+        }
+
+        header h1{
+            font-size:34px;
+        }
+
+        header p{
+            margin-top:10px;
+            font-size:16px;
+        }
+
+        .container{
+            width:90%;
+            max-width:1000px;
+            margin:40px auto;
+        }
+
+        .back{
+            display:inline-block;
+            margin-bottom:20px;
+            color:#0066cc;
+            text-decoration:none;
+        }
+
+        .summary{
+            background:white;
+            border-radius:15px;
+            padding:25px;
+            margin-bottom:25px;
+            box-shadow:0 4px 10px rgba(0,0,0,.12);
+        }
+
+        .summary h2{
+            color:#0066cc;
+            margin-bottom:10px;
+        }
+
+        .achievement-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+            gap:20px;
+        }
+
+        .achievement-card{
+            background:white;
+            border-radius:15px;
+            padding:25px;
+            text-align:center;
+            box-shadow:0 4px 10px rgba(0,0,0,.12);
+            transition:.2s;
+        }
+
+        .achievement-card:hover{
+            transform:translateY(-5px);
+        }
+
+        .achievement-card.locked{
+            opacity:.45;
+            filter:grayscale(1);
+        }
+
+        .icon{
+            font-size:45px;
+            margin-bottom:15px;
+        }
+
+        .achievement-card h3{
+            color:#0066cc;
+            margin-bottom:10px;
+        }
+
+        .achievement-card p{
+            color:#666;
+            line-height:1.6;
+        }
+
+        .status{
+            margin-top:15px;
+            font-weight:bold;
+        }
+
+        .unlocked .status{
+            color:#28a745;
+        }
+
+        .locked .status{
+            color:#888;
+        }
+
+        footer{
+            text-align:center;
+            padding:25px;
+            color:#777;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>FE Learning</h1>
+    <p>実績・称号</p>
+</header>
+
+<div class="container">
+
+    <a href="index.html" class="back">
+        ← トップページに戻る
+    </a>
+
+    <div class="summary">
+        <h2>獲得状況</h2>
+        <p>
+            獲得数：
+            <strong id="achievementCount">0</strong>
+            /
+            <strong id="achievementTotal">0</strong>
+        </p>
+    </div>
+
+    <div class="achievement-grid" id="achievementArea"></div>
+
+</div>
+
+<footer>
+    © 2026 FE Learning
+</footer>
+
+<script>
+
+    const history =
+        JSON.parse(
+            localStorage.getItem("studyHistory")
+        ) || [];
+
+
+    let totalQuestions = 0;
+    let bestRate = 0;
+    let bestCombo = 0;
+
+    let technologyBest = 0;
+    let managementBest = 0;
+    let strategyBest = 0;
+
+
+    history.forEach(function(record){
+
+        totalQuestions += record.total;
+
+        if(record.rate > bestRate){
+            bestRate = record.rate;
+        }
+
+        if(record.maxCombo > bestCombo){
+            bestCombo = record.maxCombo;
+        }
+
+        if(
+            record.category === "technology" &&
+            record.rate > technologyBest
+        ){
+            technologyBest = record.rate;
+        }
+
+        if(
+            record.category === "management" &&
+            record.rate > managementBest
+        ){
+            managementBest = record.rate;
+        }
+
+        if(
+            record.category === "strategy" &&
+            record.rate > strategyBest
+        ){
+            strategyBest = record.rate;
+        }
+
+    });
+
+
+    const achievements = [
+
+        {
+            icon:"🌱",
+            title:"はじめの一歩",
+            description:"初めて通常学習を完了する。",
+            unlocked:history.length >= 1
+        },
+
+        {
+            icon:"🔥",
+            title:"10コンボ",
+            description:"最高連続正解10問を達成する。",
+            unlocked:bestCombo >= 10
+        },
+
+        {
+            icon:"🎯",
+            title:"高得点チャレンジャー",
+            description:"1回の学習で正答率90%以上を達成する。",
+            unlocked:bestRate >= 90
+        },
+
+        {
+            icon:"💯",
+            title:"パーフェクト",
+            description:"1回の学習で正答率100%を達成する。",
+            unlocked:bestRate >= 100
+        },
+
+        {
+            icon:"📚",
+            title:"100問突破",
+            description:"累計100問以上に挑戦する。",
+            unlocked:totalQuestions >= 100
+        },
+
+        {
+            icon:"💻",
+            title:"テクノロジマスター",
+            description:"テクノロジ系で正答率90%以上を達成する。",
+            unlocked:technologyBest >= 90
+        },
+
+        {
+            icon:"📋",
+            title:"マネジメントマスター",
+            description:"マネジメント系で正答率90%以上を達成する。",
+            unlocked:managementBest >= 90
+        },
+
+        {
+            icon:"📈",
+            title:"ストラテジマスター",
+            description:"ストラテジ系で正答率90%以上を達成する。",
+            unlocked:strategyBest >= 90
+        }
+
+    ];
+
+
+    const achievementArea =
+        document.getElementById("achievementArea");
+
+    let unlockedCount = 0;
+
+
+    achievements.forEach(function(item){
+
+        if(item.unlocked){
+            unlockedCount++;
+        }
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "achievement-card " +
+            (item.unlocked ? "unlocked" : "locked");
+
+
+        card.innerHTML = `
+
+            <div class="icon">
+                ${item.icon}
+            </div>
+
+            <h3>
+                ${item.title}
+            </h3>
+
+            <p>
+                ${item.description}
+            </p>
+
+            <div class="status">
+                ${
+                    item.unlocked
+                    ? "獲得済み"
+                    : "未獲得"
+                }
+            </div>
+
+        `;
+
+        achievementArea.appendChild(card);
+
+    });
+
+
+    document.getElementById(
+        "achievementCount"
+    ).textContent =
+        unlockedCount;
+
+
+    document.getElementById(
+        "achievementTotal"
+    ).textContent =
+        achievements.length;
+
+</script>
+
+</body>
+</html>
