@@ -1057,11 +1057,37 @@
 
 
 
-        question.choices.forEach(
+        /* ====================================
+           選択肢をランダム化
+        ==================================== */
+
+        const displayedChoices =
+
+            question.choices.map(
+
+                function(choice, originalIndex){
+
+                    return {
+                        text: choice,
+                        originalIndex: originalIndex
+                    };
+
+                }
+
+            );
+
+
+        /* 元の正解番号を保持したまま表示順だけシャッフル */
+        shuffleArray(
+            displayedChoices
+        );
+
+
+        displayedChoices.forEach(
 
             function(
-                choice,
-                index
+                item,
+                displayIndex
             ){
 
 
@@ -1076,13 +1102,17 @@
                     "choice";
 
 
+                button.dataset.originalIndex =
+                    item.originalIndex;
+
+
                 button.textContent =
 
-                    (index + 1) +
+                    (displayIndex + 1) +
 
                     "．" +
 
-                    choice;
+                    item.text;
 
 
                 button.onclick =
@@ -1091,7 +1121,7 @@
 
                         checkAnswer(
                             button,
-                            index
+                            item.originalIndex
                         );
 
                     };
@@ -1205,10 +1235,26 @@
             );
 
 
-            buttons[
-                question.answer
-            ].classList.add(
-                "correct"
+            /* シャッフル後の選択肢から本当の正解を探す */
+            buttons.forEach(
+
+                function(choiceButton){
+
+                    if(
+                        Number(
+                            choiceButton.dataset.originalIndex
+                        )
+                        === question.answer
+                    ){
+
+                        choiceButton.classList.add(
+                            "correct"
+                        );
+
+                    }
+
+                }
+
             );
 
 
